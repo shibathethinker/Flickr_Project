@@ -1,0 +1,97 @@
+:host{
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+}
+
+.customTextbox{
+    width: 100%;
+  border-top:none;
+  border-left:none;
+  border-bottom:solid 2px #2C3E50;
+  font-family: 'Candara' ;
+  height: 25px;
+  font-size:20px;
+  margin: auto;
+  
+}
+
+.customTextbox:focus,.customTextbox:active{
+border-bottom:solid 2px #4CAF50;
+outline:none ;
+}
+
+.customTextbox+label{
+  transition:all .2s ease-out;
+}
+.customTextbox+.lbl{
+position: absolute;
+top:0px;
+left:0px;
+color:#3498DB;
+font-size: 18px;
+}
+
+.customTextbox:focus+ .lbl, .customTextbox:valid+.lbl{
+    top:-15px;  
+    font-size:10px;
+}
+
+.customTextbox+.lbl_moved{
+position: absolute;
+left:0px;
+top:-15px;
+font-size: 10px;
+}
+
+.textBoxContainer{
+position:relative;
+height:50px;
+top:20px;
+width:100%;
+margin-bottom: 10px;
+margin:auto;
+min-width: 300px;
+}
+
+.err{
+  color:#E74C3C;
+  font-size: 14px;
+}
+
+.customDropDown{
+  box-shadow: 3px 2px black;
+  outline: none;
+  border-top: none;
+  font-family: Candara;
+  width: 100%;
+  display:flex;
+  flex-direction: column;
+  background-color: white;
+  /* -moz-appearance: none;
+  -webkit-appearance: none; */
+}
+
+.customDropDown:invalid{
+  display: none;
+}
+
+.dropDownItems{
+  cursor: pointer !important;
+width: 100%;
+}
+
+.dropDownItems:hover{
+  background-color: #3498DB;
+}
+.dropDownItems:focus{
+  background-color: #3498DB;
+}
+
+@media (min-width:640px){
+  .textBoxContainer{
+    width: 40% !important;
+  }
+}
+

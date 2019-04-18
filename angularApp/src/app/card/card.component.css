@@ -1,0 +1,154 @@
+   
+   :host{       
+       width:300px;  
+       margin:2px;
+     height: 200px;
+     display: flex;
+     flex-direction:column;
+      }
+   :host  > img{
+      object-fit: cover;
+       display: block;
+       width: 100%;
+       height: 200px; 
+       cursor: pointer;
+   }
+/* :host:hover{
+        transform:scale(1.5)  ;
+   } */
+
+  
+   .invisible{
+       display: none;
+   }
+   .visible{
+       position: relative;
+       top:-15px;
+       display: flex;
+       background-color: whitesmoke;
+       color: #2C3E50;
+       justify-content: center;
+       cursor: pointer !important;       
+       
+   }
+
+
+   .visible label{
+       cursor: inherit;
+   }
+
+   /* .visible:hover{
+       transform: scale(1.3)
+   } */
+
+   .visible span{
+       font-size: 10px;
+   }
+
+   .modal_visible{
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 300px;
+       
+
+   }
+
+   .modal_invisible{
+       display: none;
+   }
+
+   .overlay {
+       height: 100%;
+    width: 0;
+    position: fixed; 
+    
+    left: 0;
+    top: 0;
+    background-color: rgb(0,0,0); /* Black fallback color */
+    background-color: rgba(0,0,0, 0.9); /* Black w/opacity */
+    overflow-x: hidden; /* Disable horizontal scroll */
+
+    transition: 1s;
+
+    z-index: 5000;    
+  }
+
+  /* .overlay_full{
+
+    width: 100%;
+ 
+  } */
+
+  .overlay-content {
+    position: relative;
+    top: 1%; /* 25% from the top */
+    width: 100%; /* 100% width */
+     margin-top: 30px; /* 30px top margin to avoid conflict with the close button on smaller screens */
+     text-align: center;
+  }
+
+  .overlay a {
+    /* padding: 2px; */
+    text-decoration: none;
+    font-size: 36px;
+    color: #818181;
+    display: flex; /* Display block instead of inline */
+    cursor: pointer;
+    /* overflow: hidden; */
+    justify-content: center;
+  }
+
+  .overlay .closebtn {
+    /* position: absolute;
+    top: 0px;
+    right: 0px; */
+    font-size: 80px;
+margin: auto;
+  }
+
+  @media screen and (max-height: 450px) {
+    .overlay a {font-size: 20px}
+    .overlay .closebtn {
+      font-size: 40px;
+      top: 0px;
+      right: 0px;
+    }
+  }
+   .modal_visible >a{
+    cursor: pointer;
+    color: aliceblue;
+    
+   }
+   /* :host{
+        width: 30%;
+        margin: 2px;
+        height: 30%;
+
+        margin: 0;
+    padding: 0;
+    list-style: none;
+    position: relative;
+    list-style: none;
+    width: 300px;
+    height: 200px;
+    overflow: hidden;
+    float: left;
+    z-index: 2;
+    display: flex; 
+    opacity: .3;
+    }
+
+     img{
+        height: 100%;
+        width: 100%;
+    }
+
+    img:hover{
+        transform:scale(1.1)
+    }*/
+
+    /* :host img{
+        width:100%;
+        height:100%;
+    } */

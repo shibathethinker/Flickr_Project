@@ -1,0 +1,37 @@
+/* :host {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center
+  }
+  
+  :host  a, :host::after {
+    --ratio: calc(var(--w) / var(--h));
+    --row-height: 0.75rem;
+    flex-basis: calc(var(--ratio) * var(--row-height));
+  }
+  
+  :host  a {
+    margin: 0.25rem;
+    flex-grow: calc(var(--ratio) * 25);
+  }
+  
+  :host::after {
+    --w: 2;
+    --h: 1;
+    content: '';
+    flex-grow: 1000000;
+  }
+  
+  :host  a  >img {
+    display: block;
+    width: 50%;  
+  } */
+
+  :host{
+      display: flex;      
+      width: 90%;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      overflow: auto;
+  }
