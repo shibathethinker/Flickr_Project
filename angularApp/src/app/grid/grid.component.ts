@@ -4,6 +4,7 @@ import { HttpService} from '../http-service/http-service';
 import {CardContainerComponent} from '../card-container/card-container.component';
 import { R3TargetBinder } from '@angular/compiler';
 import {DropdownitemComponent} from '../dropdownitem/dropdownitem.component';
+import {getFromTrie,createTrieForSearch} from '../Helpers/Trie';
 
 @Component({
   selector: 'grid',
@@ -51,20 +52,22 @@ export class GridComponent implements OnInit {
       matchingListFromTrie=[];
 
       errorText='';
-      placeholder='Search by available Tags or Names or Title....';
+      placeholder='Search by available Tags or Names or Titles....';
       labelClass='lbl'
       wdth="90%"
 
       inputVal='';
       dropDownDisplay="flex"
+      createTrieForSearch;
+
    ngOnInit() {    
     this.serviceInstance.getPublicFeed().subscribe((data:Response)=>
          {
            this.paramList.jsonResponse=data;           
           this.cardContainerFullData=data;
-           this.createTrieForSearch= this.createTrieForSearch.bind(this);
-           this.createTrieForSearch();
-          //console.log(data)
+           this.createTrieForSearch= createTrieForSearch.bind(this);
+           this.completeTrie=this.createTrieForSearch(this.cardContainerFullData,this.dictionaryOfKeyWordAndObjects,this.totalSearchableList,this.completeTrie);
+          //console.log(this.completeTrie)
         });
        ;
   }
@@ -112,7 +115,7 @@ console.log(this.paramList.jsonResponse);
     this.inputVal=e.target.value;
     if(this.inputVal!=='')
     {
-    let trieMatch=this.getFromTrie(e.target.value,this.completeTrie);
+    let trieMatch=getFromTrie(e.target.value,this.completeTrie);
     this.matchingListFromTrie=[];
     for(let item of trieMatch)
     //if(this.dictionaryOfKeyWordAndObjects.hasOwnProperty(item))
@@ -128,137 +131,6 @@ console.log(this.paramList.jsonResponse);
 
   dictionaryOfKeyWordAndObjects={};
 
-createMapObject(targetMap,propertyName,value)
-{
-  let prop=propertyName.toLocaleLowerCase();
-if(!targetMap.hasOwnProperty(prop))
-targetMap[prop]=[];
 
-targetMap[prop].push(value);
-}
-
-   getFromTrie(inputText,fullTrie)
-  {
-    return this.findMatchingEntries(fullTrie,0,inputText.toLowerCase());
-  }
-
-findMatchingEntries(obj,currIndex,fullWord)
-{
-let currChar=fullWord[currIndex];
-debugger;
-let nextObj={};
-if(obj.hasOwnProperty(currChar))
-{
-  nextObj=obj[currChar]; currIndex++;
-        if(currIndex<fullWord.length)
-      return this.findMatchingEntries(nextObj,currIndex,fullWord);
-      else
-      {
-        let wordArrReachableFromThisNode=[]; 
-        this.getAllEOWFromThisNode(nextObj,wordArrReachableFromThisNode,5,fullWord)  //Max 5 entries 
-        return wordArrReachableFromThisNode;
-      }
-}
-else
-return;
-}
-
-getAllEOWFromThisNode(obj,returnArr,entryCount,wordSoFar)
-{
-  if(obj!=={}){
-if(obj.hasOwnProperty("EOW") && obj["EOW"])
-{
-  returnArr.push(wordSoFar);
-  entryCount--;
-}
-        if(entryCount>0)
-        {
-        for(let i in obj )
-            {
-              if(i!=='value' && i!=='EOW')
-              {
-              //wordSoFar=wordSoFar+obj[i].value;
-              let temp=wordSoFar+obj[i].value;
-              this.getAllEOWFromThisNode(obj[i],returnArr,entryCount,temp);
-              entryCount--;
-              }
-            }
-        }
-        else
-        return;
-      }
-
-}
-
-  createTrieForSearch()
-  {
-    let nameList=[],tagList=[],titleList=[];
-
-    for (let item of this.cardContainerFullData)
-    {
-//      console.log(item.author[0].name[0]);
-      //Add Name
-      nameList.push(item.author[0].name[0]);
-      this.createMapObject(this.dictionaryOfKeyWordAndObjects,item.author[0].name[0],item);
-     //Add categories
-      let catList=item.category;
-      for(let item1 of catList)
-      {
-      if(item1.$.term.trim()!=='')
-      {
-        tagList.push(item1.$.term);
-         this.createMapObject(this.dictionaryOfKeyWordAndObjects,item1.$.term,item);
-      }
-      }
-     //Add title
-      titleList.push(item.title[0]);
-      this.createMapObject(this.dictionaryOfKeyWordAndObjects,item.title[0],item);
-    }
-    this.totalSearchableList=nameList.concat(tagList).concat(titleList);
-    //console.log(this.totalSearchableList);
-    this.completeTrie= this.generateDataStructure(this.totalSearchableList);
-    //console.log(this.completeTrie);
-  }
-
-  generateDataStructure(completeArr)
-  {
-    let returnTrie={};
-
-    for(let item of completeArr)
-        {     
-    this.checkAndPushIntoTrie(returnTrie,0,item) ;          
-       }       
-  console.log('checking....')     
- console.log(completeArr);      
-console.log(returnTrie);
-    return returnTrie;
-  }
-
-  checkAndPushIntoTrie(obj,currIndex,fullWord)
-{
-  let target=fullWord[currIndex].toLowerCase();
-  let nexObj={};
-
-          if(!obj.hasOwnProperty(target))
-          {
-            obj[target]={value:target};                   
-            nexObj=obj[target];  
-
-            if(currIndex+1==fullWord.length) //EOW reached
-            nexObj["EOW"]=true;  //Mark EOW node
-          }
-          else 
-              nexObj=obj[target];          
-
-                if(currIndex+1<fullWord.length)
-                {
-                  currIndex=currIndex+1;
-                    return this.checkAndPushIntoTrie(nexObj,currIndex,fullWord);
-                    
-                }
-                else
-                      return  obj;
-
-}
 
 }

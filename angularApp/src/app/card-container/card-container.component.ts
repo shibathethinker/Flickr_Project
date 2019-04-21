@@ -10,14 +10,14 @@ export class CardContainerComponent implements OnInit,OnChanges {
 @Input() paramList:any
 
   constructor() { 
-console.log(this.paramList);
+//console.log(this.paramList);
   }
   ngOnInit() {
   }
 
   ngOnChanges()
   {
-    console.log(this.paramList);
+    //console.log(this.paramList);
   }
 
 }

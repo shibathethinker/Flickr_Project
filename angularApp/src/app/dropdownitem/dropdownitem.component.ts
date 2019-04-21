@@ -12,7 +12,7 @@ export class DropdownitemComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    console.log(this.paramList)
+    //console.log(this.paramList)
   }
 
 
