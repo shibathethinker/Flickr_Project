@@ -115,7 +115,7 @@ console.log(this.paramList.jsonResponse);
     let trieMatch=this.getFromTrie(e.target.value,this.completeTrie);
     this.matchingListFromTrie=[];
     for(let item of trieMatch)
-    if(this.dictionaryOfKeyWordAndObjects.hasOwnProperty(item))
+    //if(this.dictionaryOfKeyWordAndObjects.hasOwnProperty(item))
     this.matchingListFromTrie.push(item);
     
     if(this.matchingListFromTrie!==undefined && this.matchingListFromTrie.length>0)
@@ -126,6 +126,17 @@ console.log(this.paramList.jsonResponse);
     {this.paramList.jsonResponse=this.cardContainerFullData;this.dropDownDisplay="none";}
   }
 
+  dictionaryOfKeyWordAndObjects={};
+
+createMapObject(targetMap,propertyName,value)
+{
+  let prop=propertyName.toLocaleLowerCase();
+if(!targetMap.hasOwnProperty(prop))
+targetMap[prop]=[];
+
+targetMap[prop].push(value);
+}
+
    getFromTrie(inputText,fullTrie)
   {
     return this.findMatchingEntries(fullTrie,0,inputText.toLowerCase());
@@ -134,6 +145,7 @@ console.log(this.paramList.jsonResponse);
 findMatchingEntries(obj,currIndex,fullWord)
 {
 let currChar=fullWord[currIndex];
+debugger;
 let nextObj={};
 if(obj.hasOwnProperty(currChar))
 {
@@ -165,8 +177,9 @@ if(obj.hasOwnProperty("EOW") && obj["EOW"])
             {
               if(i!=='value' && i!=='EOW')
               {
-              wordSoFar=wordSoFar+obj[i].value;
-              this.getAllEOWFromThisNode(obj[i],returnArr,entryCount,wordSoFar);
+              //wordSoFar=wordSoFar+obj[i].value;
+              let temp=wordSoFar+obj[i].value;
+              this.getAllEOWFromThisNode(obj[i],returnArr,entryCount,temp);
               entryCount--;
               }
             }
@@ -177,24 +190,13 @@ if(obj.hasOwnProperty("EOW") && obj["EOW"])
 
 }
 
-dictionaryOfKeyWordAndObjects={};
-
-createMapObject(targetMap,propertyName,value)
-{
-  let prop=propertyName.toLocaleLowerCase();
-if(!targetMap.hasOwnProperty(prop))
-targetMap[prop]=[];
-
-targetMap[prop].push(value);
-}
-
   createTrieForSearch()
   {
     let nameList=[],tagList=[],titleList=[];
 
     for (let item of this.cardContainerFullData)
     {
-      console.log(item.author[0].name[0]);
+//      console.log(item.author[0].name[0]);
       //Add Name
       nameList.push(item.author[0].name[0]);
       this.createMapObject(this.dictionaryOfKeyWordAndObjects,item.author[0].name[0],item);
@@ -213,9 +215,9 @@ targetMap[prop].push(value);
       this.createMapObject(this.dictionaryOfKeyWordAndObjects,item.title[0],item);
     }
     this.totalSearchableList=nameList.concat(tagList).concat(titleList);
-    console.log(this.totalSearchableList);
+    //console.log(this.totalSearchableList);
     this.completeTrie= this.generateDataStructure(this.totalSearchableList);
-    console.log(this.completeTrie);
+    //console.log(this.completeTrie);
   }
 
   generateDataStructure(completeArr)
@@ -225,7 +227,8 @@ targetMap[prop].push(value);
     for(let item of completeArr)
         {     
     this.checkAndPushIntoTrie(returnTrie,0,item) ;          
-       }
+       }       
+  console.log('checking....')     
  console.log(completeArr);      
 console.log(returnTrie);
     return returnTrie;
