@@ -89,9 +89,26 @@ width: 100%;
   background-color: #3498DB;
 }
 
+.closeBtn{
+  position: absolute;
+  right: 0px;
+  top: -10px;
+  text-decoration: none;
+  font-size: xx-large;
+  color: #2C3E50;
+}
+
+.closeBtn:hover{
+  transform: scale(1.2)
+}
+
+.closeBtnHiddn{
+  display: none;
+}
+
 @media (min-width:640px){
   .textBoxContainer{
-    width: 40% !important;
+    width: 50% !important;
   }
 }
 

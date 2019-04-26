@@ -11,8 +11,9 @@ import {getFromTrie,createTrieForSearch} from '../Helpers/Trie';
   template: `
   
   <div class="textBoxContainer"  [style.width]="wdth"  >
-<input id='inputText'  [attr.tabindex]="0"  class="customTextbox" required  (keyup)="onTextChangedFunc($event)"   value={{inputVal}} />
+<input id='inputText'  [attr.tabindex]="0"  class="customTextbox" required (keyup)="onTextChangedFunc($event)"   value={{inputVal}} />
 <label class={{labelClass}} name='placeholder_label' (click)="labelClicked()">{{placeholder}}</label>
+<a href="javascript:void(0)" class={{closeBtnClass}}  (click)="clearInput()">&times;</a>  
 
 <div id="customDropDown" class="customDropDown"  [style.display]="dropDownDisplay" attr.tabindex="-1">
 <dropdownitem  (outList)="dropDownSelected($event)" class="dropDownItems"  attr.data-index={{i}} attr.tabindex={{i}} 
@@ -35,7 +36,20 @@ export class GridComponent implements OnInit {
 
   paramList={jsonResponse:null};
   cardContainerFullData=null;
+  totalSearchableList=[];
+  //This is the trie generated for faster lookup
+   completeTrie={};
+   matchingListFromTrie=[];
 
+   errorText='';
+   placeholder='Search by available Tags or Names or Titles....';
+   labelClass='lbl'
+   wdth="90%"
+   dictionaryOfKeyWordAndObjects={};
+   closeBtnClass="closeBtnHiddn";
+   inputVal='';
+   dropDownDisplay="flex"
+   createTrieForSearch;
 
   @HostListener('click', ['$event'])
   onClick(e) {
@@ -46,20 +60,7 @@ export class GridComponent implements OnInit {
    this.serviceInstance=flickrServiceInstance;
      }
 
-     totalSearchableList=[];
-     //This is the trie generated for faster lookup
-      completeTrie={};
-      matchingListFromTrie=[];
-
-      errorText='';
-      placeholder='Search by available Tags or Names or Titles....';
-      labelClass='lbl'
-      wdth="90%"
-
-      inputVal='';
-      dropDownDisplay="flex"
-      createTrieForSearch;
-
+     
    ngOnInit() {    
     this.serviceInstance.getPublicFeed().subscribe((data:Response)=>
          {
@@ -72,14 +73,23 @@ export class GridComponent implements OnInit {
        ;
   }
 
-  setFocus(selector: string): void {
-    this.ngZone.runOutsideAngular(() => {
-        setTimeout(() => {
-            this.renderer.selectRootElement(selector).classList.add("")
-            console.log(this.renderer.selectRootElement(selector));
-        }, 0);
-    });
-}
+  //Called by the clear text button from the input
+  clearInput()
+  {
+    this.inputVal='';
+    this.closeBtnClass="closeBtnHiddn";
+    console.debug('calling...')
+    this.onTextChangedFunc({target:{value:''}});
+  }
+
+//   setFocus(selector: string): void {
+//     this.ngZone.runOutsideAngular(() => {
+//         setTimeout(() => {
+//             this.renderer.selectRootElement(selector).classList.add("")
+//             console.log(this.renderer.selectRootElement(selector));
+//         }, 0);
+//     });
+// }
 
 
   labelClicked()
@@ -87,14 +97,14 @@ export class GridComponent implements OnInit {
     this.labelClass='lbl_moved';
   }
 
-  dropdownStartSelect()
-  {
-    if(this.matchingListFromTrie.length>0)
-    {
-//data-index
-//this.setFocus('[data-index="0"]');
-    }
-  }
+//   dropdownStartSelect()
+//   {
+//     if(this.matchingListFromTrie.length>0)
+//     {
+// //data-index
+// //this.setFocus('[data-index="0"]');
+//     }
+//   }
 
   dropdownfocusout(e)
   {
@@ -106,15 +116,18 @@ export class GridComponent implements OnInit {
   {
 this.inputVal=e;
 this.dropDownDisplay="none";
-console.log(this.dictionaryOfKeyWordAndObjects);
+//console.log(this.dictionaryOfKeyWordAndObjects);
 this.paramList.jsonResponse=this.dictionaryOfKeyWordAndObjects[this.inputVal.toLocaleLowerCase()];
-console.log(this.paramList.jsonResponse);
+//console.log(this.paramList.jsonResponse);
   }
+
   onTextChangedFunc(e)
   {
+    console.log(e);
     this.inputVal=e.target.value;
     if(this.inputVal!=='')
     {
+      this.closeBtnClass="closeBtn";
     let trieMatch=getFromTrie(e.target.value,this.completeTrie);
     this.matchingListFromTrie=[];
     for(let item of trieMatch)
@@ -127,9 +140,7 @@ console.log(this.paramList.jsonResponse);
     }
     else
     {this.paramList.jsonResponse=this.cardContainerFullData;this.dropDownDisplay="none";}
-  }
-
-  dictionaryOfKeyWordAndObjects={};
+  }  
 
 
 
